@@ -62,7 +62,7 @@ export class TileMap {
 
     // Private Method:
     // Draw the wall, by the arguments that passes (x Posiotn -> coulmn, y Position -> row, size - tileSize)
-    #drawPallte(ctx: CanvasRenderingContext2D, column: number, row: number, size:) {
+    #drawPallte(ctx: CanvasRenderingContext2D, column: number, row: number, size:number) {
         ctx.drawImage(this.yellowDot, column * this.tileSize, row * this.tileSize, size, size);
     }
 }
