@@ -1,3 +1,4 @@
+import {Pacman} from './Pacman.js';
 export class TileMap {
     tileSize: number;
     yellowDot: HTMLImageElement;
@@ -14,20 +15,21 @@ export class TileMap {
 
     // map - Legend :
     //  •) 1 = Brick Wall
-    //  •) 0 = Pallate
+    //  •) 0 = Dot
+    //  •) 4 = Pacman
 
     map = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
@@ -39,7 +41,7 @@ export class TileMap {
                 if (tile === 1) {
                     this.#drawWall(ctx, column, row, this.tileSize)
                 } else if (tile === 0) {
-                    this.#drawPallte(ctx, column, row, this.tileSize)
+                    this.#drawDot(ctx, column, row, this.tileSize)
                 }
             }
         }
@@ -54,6 +56,19 @@ export class TileMap {
         canvas.height = this.map.length * this.tileSize;
     }
 
+    getPacman(velocity:number) {
+        for (let row = 0; row < this.map.length; row++) {
+             for (let column = 0; column < this.map[row].length; column++) {
+                 let tile = this.map[row][column];
+                 if (tile === 4){
+                     this.map[row][column] = 0;
+                     return new Pacman(column* this.tileSize, row* this.tileSize, this.tileSize, velocity, this);
+                 }
+              
+             }
+         }
+     }
+
     // Private Method:
     // Draw the wall, by the arguments that passes (x Posiotn -> coulmn, y Position -> row, size - tileSize)
     #drawWall(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {
@@ -62,7 +77,8 @@ export class TileMap {
 
     // Private Method:
     // Draw the wall, by the arguments that passes (x Posiotn -> coulmn, y Position -> row, size - tileSize)
-    #drawPallte(ctx: CanvasRenderingContext2D, column: number, row: number, size:number) {
+    #drawDot(ctx: CanvasRenderingContext2D, column: number, row: number, size:number) {
         ctx.drawImage(this.yellowDot, column * this.tileSize, row * this.tileSize, size, size);
     }
 }
+
