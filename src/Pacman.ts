@@ -1,5 +1,6 @@
 import { TileMap } from "./TileMap";
 
+// Creating pacman class
 export class Pacman {
     x:number;
     y:number;
@@ -18,7 +19,12 @@ export class Pacman {
     }
 
     draw(ctx:CanvasRenderingContext2D) {
-        ctx.drawImage(this.pacmanImages[this.pacmanImageIndex], this.x, this.y, this.tileSize, this.tileSize)
+        ctx.drawImage(
+            this.pacmanImages[this.pacmanImageIndex],
+            this.x,
+            this.y, 
+            this.tileSize, 
+            this.tileSize)
     }
 
     #loadPacmanImages(){
@@ -44,9 +50,3 @@ export class Pacman {
         this.pacmanImageIndex = 1;
     }
 }
-
-// column * this.tileSize,
-//  row * this.tileSize,
-//   this.tileSize,
-//    velocity,
-//     this

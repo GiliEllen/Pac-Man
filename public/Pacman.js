@@ -4,6 +4,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _Pacman_instances, _Pacman_loadPacmanImages;
+// Creating pacman class
 export class Pacman {
     constructor(x, y, tileSize, velocity, tileMap) {
         _Pacman_instances.add(this);
@@ -37,8 +38,3 @@ _Pacman_instances = new WeakSet(), _Pacman_loadPacmanImages = function _Pacman_l
     ];
     this.pacmanImageIndex = 1;
 };
-// column * this.tileSize,
-//  row * this.tileSize,
-//   this.tileSize,
-//    velocity,
-//     this
