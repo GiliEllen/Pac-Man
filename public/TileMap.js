@@ -44,8 +44,13 @@ export class TileMap {
                 else if (tile === 0) {
                     __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawDot).call(this, ctx, column, row, this.tileSize);
                 }
-                ctx.strokeStyle = "yellow";
-                ctx.strokeRect(column * this.tileSize, row * this.tileSize, this.tileSize, this.tileSize);
+                // ctx.strokeStyle = "yellow";
+                // ctx.strokeRect(
+                //     column * this.tileSize,
+                //     row * this.tileSize,
+                //     this.tileSize,
+                //     this.tileSize
+                // );
             }
         }
     }

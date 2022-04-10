@@ -11,6 +11,12 @@ export class Pacman {
         _Pacman_instances.add(this);
         this.pacmanImages = [];
         this.pacmanImageIndex = 1;
+        this.Rotation = {
+            right: 0,
+            down: 1,
+            left: 2,
+            up: 3
+        };
         _Pacman_keydown.set(this, (event) => {
             if (event.key === "ArrowUp") { //up
                 if (this.currentMovingDirection === MovingDirection.down)
@@ -42,13 +48,25 @@ export class Pacman {
         this.requestedMovingDirection = null;
         this.pacmanAnimationTimerDefualt = 10;
         this.pacmanAnimationTimer = null;
+        this.pacmanRotation = this.Rotation.right;
         document.addEventListener("keydown", __classPrivateFieldGet(this, _Pacman_keydown, "f"));
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_loadPacmanImages).call(this);
     }
     draw(ctx) {
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_move).call(this);
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_animate).call(this);
-        ctx.drawImage(this.pacmanImages[this.pacmanImageIndex], this.x, this.y, this.tileSize, this.tileSize);
+        const size = this.tileSize / 2;
+        ctx.save();
+        ctx.translate(this.x + size, this.y + size);
+        ctx.rotate((this.pacmanRotation * 90 * Math.PI) / 180);
+        ctx.drawImage(this.pacmanImages[this.pacmanImageIndex], -size, -size, this.tileSize, this.tileSize);
+        ctx.restore();
+        // ctx.drawImage(
+        //     this.pacmanImages[this.pacmanImageIndex],
+        //     this.x,
+        //     this.y,
+        //     this.tileSize,
+        //     this.tileSize)
     }
 }
 _Pacman_keydown = new WeakMap(), _Pacman_instances = new WeakSet(), _Pacman_loadPacmanImages = function _Pacman_loadPacmanImages() {
@@ -87,15 +105,19 @@ _Pacman_keydown = new WeakMap(), _Pacman_instances = new WeakSet(), _Pacman_load
     switch (this.currentMovingDirection) {
         case MovingDirection.up:
             this.y -= this.velocity;
+            this.pacmanRotation = this.Rotation.up;
             break;
         case MovingDirection.down:
             this.y += this.velocity;
+            this.pacmanRotation = this.Rotation.down;
             break;
         case MovingDirection.left:
             this.x -= this.velocity;
+            this.pacmanRotation = this.Rotation.left;
             break;
         case MovingDirection.right:
             this.x += this.velocity;
+            this.pacmanRotation = this.Rotation.right;
             break;
     }
 }, _Pacman_animate = function _Pacman_animate() {

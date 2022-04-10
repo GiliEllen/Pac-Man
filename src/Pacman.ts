@@ -14,6 +14,7 @@ export class Pacman {
     requestedMovingDirection: number | null;
     pacmanAnimationTimerDefualt: number;
     pacmanAnimationTimer: number | null;
+    pacmanRotation: number;
 
     constructor(x: number, y: number, tileSize: number, velocity: number, tileMap: TileMap) {
         this.x = x;
@@ -28,20 +29,45 @@ export class Pacman {
         this.pacmanAnimationTimerDefualt = 10;
         this.pacmanAnimationTimer = null;
 
+        this.pacmanRotation = this.Rotation.right;
+
         document.addEventListener("keydown", this.#keydown)
 
         this.#loadPacmanImages();
     }
 
+    Rotation = {
+        right: 0,
+        down: 1,
+        left: 2,
+        up: 3
+    }
+
     draw(ctx: CanvasRenderingContext2D) {
         this.#move();
         this.#animate();
+
+        const size = this.tileSize / 2;
+
+        ctx.save();
+        ctx.translate(this.x + size, this.y + size);
+        ctx.rotate((this.pacmanRotation * 90 * Math.PI) / 180);
         ctx.drawImage(
             this.pacmanImages[this.pacmanImageIndex],
-            this.x,
-            this.y,
+            -size,
+            -size,
             this.tileSize,
-            this.tileSize)
+            this.tileSize
+        );
+
+        ctx.restore();
+
+        // ctx.drawImage(
+        //     this.pacmanImages[this.pacmanImageIndex],
+        //     this.x,
+        //     this.y,
+        //     this.tileSize,
+        //     this.tileSize)
     }
 
     #loadPacmanImages() {
@@ -128,18 +154,22 @@ export class Pacman {
         switch (this.currentMovingDirection) {
             case MovingDirection.up:
                 this.y -= this.velocity;
+                this.pacmanRotation = this.Rotation.up;
                 break;
 
             case MovingDirection.down:
                 this.y += this.velocity;
+                this.pacmanRotation = this.Rotation.down;
                 break;
 
             case MovingDirection.left:
                 this.x -= this.velocity;
+                this.pacmanRotation = this.Rotation.left;
                 break;
 
             case MovingDirection.right:
                 this.x += this.velocity;
+                this.pacmanRotation = this.Rotation.right;
                 break;
         }
     }
