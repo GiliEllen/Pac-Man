@@ -69,6 +69,9 @@ export class TileMap {
         }
     }
     didCollideWithEnviorment(x, y, direction) {
+        if (direction === null) {
+            return;
+        }
         if (Number.isInteger(x / this.tileSize) &&
             Number.isInteger(y / this.tileSize)) {
             let column = 0; // index of column in map

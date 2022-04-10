@@ -79,6 +79,11 @@ export class TileMap {
     }
 
     didCollideWithEnviorment(x: number, y: number, direction: number | null) {
+
+        if (direction === null) {
+            return;
+        }
+
         if (
             Number.isInteger(x / this.tileSize) &&
             Number.isInteger(y / this.tileSize)
@@ -116,7 +121,7 @@ export class TileMap {
             if (tile === 1) {
                 return true;
             }
-        } 
+        }
         return false;
     }
 
