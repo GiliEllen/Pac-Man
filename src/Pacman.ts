@@ -15,6 +15,7 @@ export class Pacman {
     pacmanAnimationTimerDefualt: number;
     pacmanAnimationTimer: number | null;
     pacmanRotation: number;
+    wakaSound: HTMLAudioElement;
 
     constructor(x: number, y: number, tileSize: number, velocity: number, tileMap: TileMap) {
         this.x = x;
@@ -30,6 +31,8 @@ export class Pacman {
         this.pacmanAnimationTimer = null;
 
         this.pacmanRotation = this.Rotation.right;
+
+        this.wakaSound = new Audio('../sounds/waka.wav');
 
         document.addEventListener("keydown", this.#keydown)
 
@@ -191,7 +194,7 @@ export class Pacman {
 
     #eatDot() {
         if(this.tileMap.eatDot(this.x, this.y)){
-            // Play sound
+            this.wakaSound.play();
         }
     }
 }

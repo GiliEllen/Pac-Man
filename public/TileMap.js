@@ -5,6 +5,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _TileMap_instances, _TileMap_drawWall, _TileMap_drawDot, _TileMap_drawBlank;
 import { MovingDirection } from './MoveDirection.js';
+import { Enemy } from './Enemy.js';
 import { Pacman } from './Pacman.js';
 export class TileMap {
     constructor(tileSize) {
@@ -13,6 +14,8 @@ export class TileMap {
         //  •) 1 = Brick Wall
         //  •) 0 = Dot
         //  •) 4 = Pacman
+        //  •) 5 = Empty space
+        //  •) 6 = Enemy
         this.map = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -75,6 +78,19 @@ export class TileMap {
                 }
             }
         }
+    }
+    getEnemies(velocity) {
+        const enemies = [];
+        for (let row = 0; row < this.map.length; row++) {
+            for (let column = 0; column < this.map[row].length; column++) {
+                const tile = this.map[row][column];
+                if (tile === 6) {
+                    this.map[row][column] = 0;
+                    enemies.push(new Enemy(column * this.tileSize, row * this.tileSize, this.tileSize, velocity, this));
+                }
+            }
+        }
+        return enemies;
     }
     didCollideWithEnviorment(x, y, direction) {
         if (direction === null) {

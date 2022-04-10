@@ -49,6 +49,7 @@ export class Pacman {
         this.pacmanAnimationTimerDefualt = 10;
         this.pacmanAnimationTimer = null;
         this.pacmanRotation = this.Rotation.right;
+        this.wakaSound = new Audio('../sounds/waka.wav');
         document.addEventListener("keydown", __classPrivateFieldGet(this, _Pacman_keydown, "f"));
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_loadPacmanImages).call(this);
     }
@@ -135,6 +136,6 @@ _Pacman_keydown = new WeakMap(), _Pacman_instances = new WeakSet(), _Pacman_load
     }
 }, _Pacman_eatDot = function _Pacman_eatDot() {
     if (this.tileMap.eatDot(this.x, this.y)) {
-        // Play sound
+        this.wakaSound.play();
     }
 };
