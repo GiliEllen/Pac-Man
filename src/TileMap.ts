@@ -43,6 +43,8 @@ export class TileMap {
                     this.#drawWall(ctx, column, row, this.tileSize)
                 } else if (tile === 0) {
                     this.#drawDot(ctx, column, row, this.tileSize)
+                } else {
+                    this.#drawBlank(ctx, column, row, this.tileSize)
                 }
 
                 // ctx.strokeStyle = "yellow";
@@ -125,6 +127,19 @@ export class TileMap {
         return false;
     }
 
+    eatDot(x:number, y:number) {
+        const row = y / this.tileSize;
+        const column = x / this.tileSize;
+        
+        if(Number.isInteger(row) && Number.isInteger(column)) {
+            if (this.map[row][column] === 0) {
+                this.map[row][column] = 5;
+                return true;
+            }
+        } 
+        return false;
+    }
+
     // Private Method:
     // Draw the wall, by the arguments that passes (x Posiotn -> coulmn, y Position -> row, size - tileSize)
     #drawWall(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {
@@ -135,6 +150,11 @@ export class TileMap {
     // Draw the wall, by the arguments that passes (x Posiotn -> coulmn, y Position -> row, size - tileSize)
     #drawDot(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {
         ctx.drawImage(this.yellowDot, column * this.tileSize, row * this.tileSize, size, size);
+    }
+
+    #drawBlank(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(column * this.tileSize, row * this.tileSize, size, size);
     }
 }
 

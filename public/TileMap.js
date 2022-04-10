@@ -3,7 +3,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _TileMap_instances, _TileMap_drawWall, _TileMap_drawDot;
+var _TileMap_instances, _TileMap_drawWall, _TileMap_drawDot, _TileMap_drawBlank;
 import { MovingDirection } from './MoveDirection.js';
 import { Pacman } from './Pacman.js';
 export class TileMap {
@@ -43,6 +43,9 @@ export class TileMap {
                 }
                 else if (tile === 0) {
                     __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawDot).call(this, ctx, column, row, this.tileSize);
+                }
+                else {
+                    __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawBlank).call(this, ctx, column, row, this.tileSize);
                 }
                 // ctx.strokeStyle = "yellow";
                 // ctx.strokeRect(
@@ -112,9 +115,23 @@ export class TileMap {
         }
         return false;
     }
+    eatDot(x, y) {
+        const row = y / this.tileSize;
+        const column = x / this.tileSize;
+        if (Number.isInteger(row) && Number.isInteger(column)) {
+            if (this.map[row][column] === 0) {
+                this.map[row][column] = 5;
+                return true;
+            }
+        }
+        return false;
+    }
 }
 _TileMap_instances = new WeakSet(), _TileMap_drawWall = function _TileMap_drawWall(ctx, column, row, size) {
     ctx.drawImage(this.wall, column * this.tileSize, row * this.tileSize, size, size);
 }, _TileMap_drawDot = function _TileMap_drawDot(ctx, column, row, size) {
     ctx.drawImage(this.yellowDot, column * this.tileSize, row * this.tileSize, size, size);
+}, _TileMap_drawBlank = function _TileMap_drawBlank(ctx, column, row, size) {
+    ctx.fillStyle = 'black';
+    ctx.fillRect(column * this.tileSize, row * this.tileSize, size, size);
 };

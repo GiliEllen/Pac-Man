@@ -46,6 +46,7 @@ export class Pacman {
     draw(ctx: CanvasRenderingContext2D) {
         this.#move();
         this.#animate();
+        this.#eatDot();
 
         const size = this.tileSize / 2;
 
@@ -188,4 +189,9 @@ export class Pacman {
         }
     }
 
+    #eatDot() {
+        if(this.tileMap.eatDot(this.x, this.y)){
+            // Play sound
+        }
+    }
 }
