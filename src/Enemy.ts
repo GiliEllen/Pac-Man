@@ -1,4 +1,5 @@
 import { MovingDirection } from "./MoveDirection.js";
+import { Pacman } from "./Pacman.js";
 import { TileMap } from "./TileMap.js";
 
 export class Enemy {
@@ -14,6 +15,8 @@ export class Enemy {
     movingDirection: number;
     directionTimerDefault: number;
     directionTimer: number;
+    scaredAboutToExpireTimerDefault:number;
+    scaredAboutToExpireTimer:number;
 
     constructor(x: number, y: number, tileSize: number, velocity: number, tileMap: TileMap) {
         this.x = x;
@@ -31,15 +34,43 @@ export class Enemy {
         this.directionTimerDefault = this.#random(10, 50);
         this.directionTimer = this.directionTimerDefault;
 
+        this.scaredAboutToExpireTimerDefault = 10;
+        this.scaredAboutToExpireTimer = this.scaredAboutToExpireTimerDefault;
+
         this.#loadImages();
     }
 
-    draw(ctx: CanvasRenderingContext2D, pause: boolean) {
+    draw(ctx: CanvasRenderingContext2D, pause: boolean, pacman: Pacman) {
         if (!pause) {
             this.#move();
             this.#changeDirection();
         }
+        this.setImage(ctx, pacman);
+    }
+
+    setImage(ctx:CanvasRenderingContext2D, pacman:Pacman) {
+        if(pacman.powerDotIsActive) {
+            this.#setImageWhenPowerDotIsActive(pacman)
+        } else {
+            this.image = this.normalGhost;
+        }
         ctx.drawImage(this.image, this.x, this.y, this.tileSize, this.tileSize);
+    }
+
+    #setImageWhenPowerDotIsActive(pacman:Pacman){
+        if (pacman.powerDotIsAboutToExpire) {
+            this.scaredAboutToExpireTimer--;
+            if (this.scaredAboutToExpireTimer === 0) {
+                this.scaredAboutToExpireTimer = this.scaredAboutToExpireTimerDefault;
+                if(this.image === this.scaredGhost) {
+                    this.image = this.scaredGhost2;
+                }else {
+                    this.image = this.scaredGhost;
+                }
+            }
+        } else {
+            this.image = this.scaredGhost;
+        }
     }
 
     #loadImages() {
@@ -54,6 +85,7 @@ export class Enemy {
 
         this.image = this.normalGhost;
     }
+
 
     #random(min: number, max: number) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
