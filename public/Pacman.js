@@ -59,9 +59,11 @@ export class Pacman {
         document.addEventListener("keydown", __classPrivateFieldGet(this, _Pacman_keydown, "f"));
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_loadPacmanImages).call(this);
     }
-    draw(ctx) {
-        __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_move).call(this);
-        __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_animate).call(this);
+    draw(ctx, pause) {
+        if (!pause) {
+            __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_move).call(this);
+            __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_animate).call(this);
+        }
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_eatDot).call(this);
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_eatPowerDot).call(this);
         const size = this.tileSize / 2;

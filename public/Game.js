@@ -12,14 +12,14 @@ const gameOverSound = new Audio('../sounds/gameOver.wav');
 const gameWinSound = new Audio('../sounds/gameWin.wav');
 function gameLoop() {
     tileMap.draw(ctx);
-    pacman.draw(ctx);
+    pacman.draw(ctx, pause());
     enemies.forEach(enemy => {
         enemy.draw(ctx, pause(), pacman);
     });
     checkGameOver();
 }
 function pause() {
-    return !pacman.madeFirstMove;
+    return !pacman.madeFirstMove || gameOver;
 }
 function checkGameOver() {
     if (!gameOver) { //if gameOver === false

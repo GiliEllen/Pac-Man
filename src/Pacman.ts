@@ -20,7 +20,7 @@ export class Pacman {
     madeFirstMove: boolean;
     powerDotIsActive: boolean;
     powerDotIsAboutToExpire: boolean;
-    timers:Array<number>;
+    timers: Array<number>;
 
     constructor(x: number, y: number, tileSize: number, velocity: number, tileMap: TileMap) {
         this.x = x;
@@ -59,9 +59,11 @@ export class Pacman {
         up: 3
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
-        this.#move();
-        this.#animate();
+    draw(ctx: CanvasRenderingContext2D, pause: boolean) {
+        if (!pause) {
+            this.#move();
+            this.#animate();
+        }
         this.#eatDot();
         this.#eatPowerDot();
 
@@ -208,7 +210,7 @@ export class Pacman {
     }
 
     #eatDot() {
-        if(this.tileMap.eatDot(this.x, this.y) && this.madeFirstMove){
+        if (this.tileMap.eatDot(this.x, this.y) && this.madeFirstMove) {
             this.wakaSound.play();
         }
     }
@@ -219,21 +221,21 @@ export class Pacman {
             this.powerDotIsActive = true;
             this.powerDotIsAboutToExpire = false;
 
-            this.timers.forEach(timer =>{
+            this.timers.forEach(timer => {
                 clearTimeout(timer);
             });
             this.timers = [];
 
-            let powerDotTimer = setTimeout(()=>{
+            let powerDotTimer = setTimeout(() => {
                 this.powerDotIsActive = false;
                 this.powerDotIsAboutToExpire = false;
-            },1000*6);
+            }, 1000 * 6);
 
             this.timers.push(powerDotTimer);
 
-            let powerDotIsAboutToExpireTimer = setTimeout(()=>{
+            let powerDotIsAboutToExpireTimer = setTimeout(() => {
                 this.powerDotIsAboutToExpire = true;
-            },1000*3);
+            }, 1000 * 3);
             this.timers.push(powerDotIsAboutToExpireTimer);
         }
     }
