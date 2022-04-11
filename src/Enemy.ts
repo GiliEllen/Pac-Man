@@ -15,8 +15,8 @@ export class Enemy {
     movingDirection: number;
     directionTimerDefault: number;
     directionTimer: number;
-    scaredAboutToExpireTimerDefault:number;
-    scaredAboutToExpireTimer:number;
+    scaredAboutToExpireTimerDefault: number;
+    scaredAboutToExpireTimer: number;
 
     constructor(x: number, y: number, tileSize: number, velocity: number, tileMap: TileMap) {
         this.x = x;
@@ -48,8 +48,22 @@ export class Enemy {
         this.setImage(ctx, pacman);
     }
 
-    setImage(ctx:CanvasRenderingContext2D, pacman:Pacman) {
-        if(pacman.powerDotIsActive) {
+    collideWith(pacman: Pacman) {
+        const size = this.tileSize / 2;
+        if (
+            this.x < pacman.x + size &&
+            this.x + size > pacman.x &&
+            this.y < pacman.y + size &&
+            this.y + size > pacman.y
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    setImage(ctx: CanvasRenderingContext2D, pacman: Pacman) {
+        if (pacman.powerDotIsActive) {
             this.#setImageWhenPowerDotIsActive(pacman)
         } else {
             this.image = this.normalGhost;
@@ -57,14 +71,14 @@ export class Enemy {
         ctx.drawImage(this.image, this.x, this.y, this.tileSize, this.tileSize);
     }
 
-    #setImageWhenPowerDotIsActive(pacman:Pacman){
+    #setImageWhenPowerDotIsActive(pacman: Pacman) {
         if (pacman.powerDotIsAboutToExpire) {
             this.scaredAboutToExpireTimer--;
             if (this.scaredAboutToExpireTimer === 0) {
                 this.scaredAboutToExpireTimer = this.scaredAboutToExpireTimerDefault;
-                if(this.image === this.scaredGhost) {
+                if (this.image === this.scaredGhost) {
                     this.image = this.scaredGhost2;
-                }else {
+                } else {
                     this.image = this.scaredGhost;
                 }
             }
