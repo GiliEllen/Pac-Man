@@ -16,7 +16,11 @@ export class Pacman {
     pacmanAnimationTimer: number | null;
     pacmanRotation: number;
     wakaSound: HTMLAudioElement;
+    powerDotSound: HTMLAudioElement;
     madeFirstMove: boolean;
+    powerDotIsActive: boolean;
+    powerDotIsAboutToExpire: boolean;
+    timers:Array<number>;
 
     constructor(x: number, y: number, tileSize: number, velocity: number, tileMap: TileMap) {
         this.x = x;
@@ -35,7 +39,13 @@ export class Pacman {
 
         this.madeFirstMove = false;
 
+        this.powerDotIsActive = false;
+        this.powerDotIsAboutToExpire = false;
+
+        this.timers = [];
+
         this.wakaSound = new Audio('../sounds/waka.wav');
+        this.powerDotSound = new Audio('../sounds/power_dot.wav');
 
         document.addEventListener("keydown", this.#keydown)
 
@@ -198,14 +208,33 @@ export class Pacman {
     }
 
     #eatDot() {
-        if(this.tileMap.eatDot(this.x, this.y)){
+        if(this.tileMap.eatDot(this.x, this.y) && this.madeFirstMove){
             this.wakaSound.play();
         }
     }
 
     #eatPowerDot() {
         if (this.tileMap.eatPowerDot(this.x, this.y)) {
-            //Ghosts will be scared! baaa!!
+            this.powerDotSound.play();
+            this.powerDotIsActive = true;
+            this.powerDotIsAboutToExpire = false;
+
+            this.timers.forEach(timer =>{
+                clearTimeout(timer);
+            });
+            this.timers = [];
+
+            let powerDotTimer = setTimeout(()=>{
+                this.powerDotIsActive = false;
+                this.powerDotIsAboutToExpire = false;
+            },1000*6);
+
+            this.timers.push(powerDotTimer);
+
+            let powerDotIsAboutToExpireTimer = setTimeout(()=>{
+                this.powerDotIsAboutToExpire = true;
+            },1000*3);
+            this.timers.push(powerDotIsAboutToExpireTimer);
         }
     }
 }

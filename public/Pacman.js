@@ -51,7 +51,11 @@ export class Pacman {
         this.pacmanAnimationTimer = null;
         this.pacmanRotation = this.Rotation.right;
         this.madeFirstMove = false;
+        this.powerDotIsActive = false;
+        this.powerDotIsAboutToExpire = false;
+        this.timers = [];
         this.wakaSound = new Audio('../sounds/waka.wav');
+        this.powerDotSound = new Audio('../sounds/power_dot.wav');
         document.addEventListener("keydown", __classPrivateFieldGet(this, _Pacman_keydown, "f"));
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_loadPacmanImages).call(this);
     }
@@ -138,11 +142,26 @@ _Pacman_keydown = new WeakMap(), _Pacman_instances = new WeakSet(), _Pacman_load
         }
     }
 }, _Pacman_eatDot = function _Pacman_eatDot() {
-    if (this.tileMap.eatDot(this.x, this.y)) {
+    if (this.tileMap.eatDot(this.x, this.y) && this.madeFirstMove) {
         this.wakaSound.play();
     }
 }, _Pacman_eatPowerDot = function _Pacman_eatPowerDot() {
     if (this.tileMap.eatPowerDot(this.x, this.y)) {
-        //Ghosts will be scared! baaa!!
+        this.powerDotSound.play();
+        this.powerDotIsActive = true;
+        this.powerDotIsAboutToExpire = false;
+        this.timers.forEach(timer => {
+            clearTimeout(timer);
+        });
+        this.timers = [];
+        let powerDotTimer = setTimeout(() => {
+            this.powerDotIsActive = false;
+            this.powerDotIsAboutToExpire = false;
+        }, 1000 * 6);
+        this.timers.push(powerDotTimer);
+        let powerDotIsAboutToExpireTimer = setTimeout(() => {
+            this.powerDotIsAboutToExpire = true;
+        }, 1000 * 3);
+        this.timers.push(powerDotIsAboutToExpireTimer);
     }
 };
