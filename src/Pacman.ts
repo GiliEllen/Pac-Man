@@ -16,6 +16,7 @@ export class Pacman {
     pacmanAnimationTimer: number | null;
     pacmanRotation: number;
     wakaSound: HTMLAudioElement;
+    madeFirstMove: boolean;
 
     constructor(x: number, y: number, tileSize: number, velocity: number, tileMap: TileMap) {
         this.x = x;
@@ -31,6 +32,8 @@ export class Pacman {
         this.pacmanAnimationTimer = null;
 
         this.pacmanRotation = this.Rotation.right;
+
+        this.madeFirstMove = false;
 
         this.wakaSound = new Audio('../sounds/waka.wav');
 
@@ -98,6 +101,7 @@ export class Pacman {
     }
 
     #keydown = (event: KeyboardEvent) => {
+        this.madeFirstMove = true;
         if (event.key === "ArrowUp") { //up
             if (this.currentMovingDirection === MovingDirection.down)
                 this.currentMovingDirection = MovingDirection.up;

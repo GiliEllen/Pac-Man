@@ -4,15 +4,27 @@ import { Pacman } from './Pacman.js';
 export class TileMap {
     tileSize: number;
     yellowDot: HTMLImageElement;
+    pinkDot: HTMLImageElement;
+    powerDot: HTMLImageElement;
     wall: HTMLImageElement;
+    powerDotAnimationTimerDefault: number;
+    powerDotAnimationTimer: number;
+
     constructor(tileSize: number) {
         this.tileSize = tileSize;
 
         this.yellowDot = new Image();
         this.yellowDot.src = '../images/yellowDot.png';
 
+        this.pinkDot = new Image();
+        this.pinkDot.src = '../images/pinkDot.png';
+
         this.wall = new Image();
         this.wall.src = '../images/wall.png';
+
+        this.powerDot = this.pinkDot;
+        this.powerDotAnimationTimerDefault = 30;
+        this.powerDotAnimationTimer = this.powerDotAnimationTimerDefault;
     }
 
     // map - Legend :
@@ -21,20 +33,21 @@ export class TileMap {
     //  •) 4 = Pacman
     //  •) 5 = Empty space
     //  •) 6 = Enemy
+    //  •) 7 = PowerDot
 
     map = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 7, 1],
         [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
         [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
         [1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
         [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 1, 6, 1, 0, 1, 1, 1, 1, 6, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 0, 7, 0, 0, 1],
         [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 7, 0, 0, 1, 0, 0, 0, 1, 0, 1],
         [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 6, 1],
-        [1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1],
+        [1, 7, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
 
@@ -46,6 +59,8 @@ export class TileMap {
                     this.#drawWall(ctx, column, row, this.tileSize)
                 } else if (tile === 0) {
                     this.#drawDot(ctx, column, row, this.tileSize)
+                } else if (tile === 7) {
+                    this.#drawPowerDot(ctx, column, row, this.tileSize)
                 } else {
                     this.#drawBlank(ctx, column, row, this.tileSize)
                 }
@@ -174,6 +189,20 @@ export class TileMap {
     // Draw the wall, by the arguments that passes (x Posiotn -> coulmn, y Position -> row, size - tileSize)
     #drawDot(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {
         ctx.drawImage(this.yellowDot, column * this.tileSize, row * this.tileSize, size, size);
+    }
+
+    #drawPowerDot(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {
+        this.powerDotAnimationTimer--;
+        if (this.powerDotAnimationTimer === 0) {
+            this.powerDotAnimationTimer = this.powerDotAnimationTimerDefault;
+            if (this.powerDot === this.pinkDot) {
+                this.powerDot = this.yellowDot;
+            } else {
+                this.powerDot = this.pinkDot;
+            }
+        }
+
+        ctx.drawImage(this.powerDot, column * size, row * size, size, size);
     }
 
     #drawBlank(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {

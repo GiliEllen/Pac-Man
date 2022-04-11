@@ -14,8 +14,12 @@ function gameLoop(){
     tileMap.draw(ctx);
     pacman.draw(ctx);
     enemies.forEach(enemy => { 
-        enemy.draw(ctx);
+        enemy.draw(ctx, pause());
     });
+}
+
+function pause() {
+    return !pacman.madeFirstMove;
 }
 
 tileMap.setCanvasSize(canvas); // Setting the canvas to match the map size.

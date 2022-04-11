@@ -3,7 +3,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _TileMap_instances, _TileMap_drawWall, _TileMap_drawDot, _TileMap_drawBlank;
+var _TileMap_instances, _TileMap_drawWall, _TileMap_drawDot, _TileMap_drawPowerDot, _TileMap_drawBlank;
 import { MovingDirection } from './MoveDirection.js';
 import { Enemy } from './Enemy.js';
 import { Pacman } from './Pacman.js';
@@ -16,26 +16,32 @@ export class TileMap {
         //  •) 4 = Pacman
         //  •) 5 = Empty space
         //  •) 6 = Enemy
+        //  •) 7 = PowerDot
         this.map = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 7, 1],
             [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
             [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
             [1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
             [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 1, 6, 1, 0, 1, 1, 1, 1, 6, 0, 1],
-            [1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+            [1, 0, 1, 0, 1, 0, 1, 0, 0, 7, 0, 0, 1],
             [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-            [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+            [1, 0, 1, 7, 0, 0, 1, 0, 0, 0, 1, 0, 1],
             [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 6, 1],
-            [1, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1],
+            [1, 7, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ];
         this.tileSize = tileSize;
         this.yellowDot = new Image();
         this.yellowDot.src = '../images/yellowDot.png';
+        this.pinkDot = new Image();
+        this.pinkDot.src = '../images/pinkDot.png';
         this.wall = new Image();
         this.wall.src = '../images/wall.png';
+        this.powerDot = this.pinkDot;
+        this.powerDotAnimationTimerDefault = 30;
+        this.powerDotAnimationTimer = this.powerDotAnimationTimerDefault;
     }
     draw(ctx) {
         for (let row = 0; row < this.map.length; row++) {
@@ -46,6 +52,9 @@ export class TileMap {
                 }
                 else if (tile === 0) {
                     __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawDot).call(this, ctx, column, row, this.tileSize);
+                }
+                else if (tile === 7) {
+                    __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawPowerDot).call(this, ctx, column, row, this.tileSize);
                 }
                 else {
                     __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawBlank).call(this, ctx, column, row, this.tileSize);
@@ -147,6 +156,18 @@ _TileMap_instances = new WeakSet(), _TileMap_drawWall = function _TileMap_drawWa
     ctx.drawImage(this.wall, column * this.tileSize, row * this.tileSize, size, size);
 }, _TileMap_drawDot = function _TileMap_drawDot(ctx, column, row, size) {
     ctx.drawImage(this.yellowDot, column * this.tileSize, row * this.tileSize, size, size);
+}, _TileMap_drawPowerDot = function _TileMap_drawPowerDot(ctx, column, row, size) {
+    this.powerDotAnimationTimer--;
+    if (this.powerDotAnimationTimer === 0) {
+        this.powerDotAnimationTimer = this.powerDotAnimationTimerDefault;
+        if (this.powerDot === this.pinkDot) {
+            this.powerDot = this.yellowDot;
+        }
+        else {
+            this.powerDot = this.pinkDot;
+        }
+    }
+    ctx.drawImage(this.powerDot, column * size, row * size, size, size);
 }, _TileMap_drawBlank = function _TileMap_drawBlank(ctx, column, row, size) {
     ctx.fillStyle = 'black';
     ctx.fillRect(column * this.tileSize, row * this.tileSize, size, size);

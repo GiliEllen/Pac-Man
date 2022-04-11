@@ -22,9 +22,11 @@ export class Enemy {
         this.directionTimer = this.directionTimerDefault;
         __classPrivateFieldGet(this, _Enemy_instances, "m", _Enemy_loadImages).call(this);
     }
-    draw(ctx) {
-        __classPrivateFieldGet(this, _Enemy_instances, "m", _Enemy_move).call(this);
-        __classPrivateFieldGet(this, _Enemy_instances, "m", _Enemy_changeDirection).call(this);
+    draw(ctx, pause) {
+        if (!pause) {
+            __classPrivateFieldGet(this, _Enemy_instances, "m", _Enemy_move).call(this);
+            __classPrivateFieldGet(this, _Enemy_instances, "m", _Enemy_changeDirection).call(this);
+        }
         ctx.drawImage(this.image, this.x, this.y, this.tileSize, this.tileSize);
     }
 }

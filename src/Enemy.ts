@@ -34,9 +34,11 @@ export class Enemy {
         this.#loadImages();
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
-        this.#move();
-        this.#changeDirection();
+    draw(ctx: CanvasRenderingContext2D, pause: boolean) {
+        if (!pause) {
+            this.#move();
+            this.#changeDirection();
+        }
         ctx.drawImage(this.image, this.x, this.y, this.tileSize, this.tileSize);
     }
 
@@ -85,7 +87,7 @@ export class Enemy {
         }
         if (newMoveDirection !== null && this.movingDirection !== newMoveDirection) {
             if (Number.isInteger(this.x / this.tileSize) && Number.isInteger(this.y / this.tileSize)) {
-                if(!this.tileMap.didCollideWithEnviorment(this.x, this.y, newMoveDirection)) {
+                if (!this.tileMap.didCollideWithEnviorment(this.x, this.y, newMoveDirection)) {
                     this.movingDirection = newMoveDirection;
                 }
             }
