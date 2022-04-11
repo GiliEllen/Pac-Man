@@ -179,6 +179,20 @@ export class TileMap {
         return false;
     }
 
+    eatPowerDot (x: number, y: number) {
+        const column = x / this.tileSize;
+        const row = y / this.tileSize;
+
+        if (Number.isInteger(row) && Number.isInteger(column)) {
+            let tile = this.map[row][column];
+            if(tile === 7) {
+                this.map[row][column] = 5;
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Private Method:
     // Draw the wall, by the arguments that passes (x Posiotn -> coulmn, y Position -> row, size - tileSize)
     #drawWall(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {

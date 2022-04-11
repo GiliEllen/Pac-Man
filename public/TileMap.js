@@ -151,6 +151,18 @@ export class TileMap {
         }
         return false;
     }
+    eatPowerDot(x, y) {
+        const column = x / this.tileSize;
+        const row = y / this.tileSize;
+        if (Number.isInteger(row) && Number.isInteger(column)) {
+            let tile = this.map[row][column];
+            if (tile === 7) {
+                this.map[row][column] = 5;
+                return true;
+            }
+        }
+        return false;
+    }
 }
 _TileMap_instances = new WeakSet(), _TileMap_drawWall = function _TileMap_drawWall(ctx, column, row, size) {
     ctx.drawImage(this.wall, column * this.tileSize, row * this.tileSize, size, size);
