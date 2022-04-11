@@ -1,5 +1,6 @@
 import { TileMap } from "./TileMap.js";
 import { MovingDirection } from "./MoveDirection.js"
+import { Enemy } from "./Enemy.js";
 
 // Creating pacman class
 export class Pacman {
@@ -17,6 +18,7 @@ export class Pacman {
     pacmanRotation: number;
     wakaSound: HTMLAudioElement;
     powerDotSound: HTMLAudioElement;
+    eatGhostSound: HTMLAudioElement;
     madeFirstMove: boolean;
     powerDotIsActive: boolean;
     powerDotIsAboutToExpire: boolean;
@@ -46,6 +48,7 @@ export class Pacman {
 
         this.wakaSound = new Audio('../sounds/waka.wav');
         this.powerDotSound = new Audio('../sounds/power_dot.wav');
+        this.eatGhostSound = new Audio('../sounds/eat_ghost.wav');
 
         document.addEventListener("keydown", this.#keydown)
 
@@ -59,13 +62,14 @@ export class Pacman {
         up: 3
     }
 
-    draw(ctx: CanvasRenderingContext2D, pause: boolean) {
+    draw(ctx: CanvasRenderingContext2D, pause: boolean, enemies:Array<Enemy>) {
         if (!pause) {
             this.#move();
             this.#animate();
         }
         this.#eatDot();
         this.#eatPowerDot();
+        this.#eatGhost(enemies);
 
         const size = this.tileSize / 2;
 
@@ -237,6 +241,16 @@ export class Pacman {
                 this.powerDotIsAboutToExpire = true;
             }, 1000 * 3);
             this.timers.push(powerDotIsAboutToExpireTimer);
+        }
+    }
+    
+    #eatGhost(enemies:Array<Enemy>) {
+        if (this.powerDotIsActive) {
+            const collideEnemies = enemies.filter((enemy) => enemy.collideWith(this));
+            collideEnemies.forEach(enemy =>{
+                enemies.splice(enemies.indexOf(enemy),1);
+                this.eatGhostSound.play();
+            })
         }
     }
 }

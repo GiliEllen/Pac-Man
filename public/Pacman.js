@@ -3,7 +3,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _Pacman_instances, _Pacman_loadPacmanImages, _Pacman_keydown, _Pacman_move, _Pacman_animate, _Pacman_eatDot, _Pacman_eatPowerDot;
+var _Pacman_instances, _Pacman_loadPacmanImages, _Pacman_keydown, _Pacman_move, _Pacman_animate, _Pacman_eatDot, _Pacman_eatPowerDot, _Pacman_eatGhost;
 import { MovingDirection } from "./MoveDirection.js";
 // Creating pacman class
 export class Pacman {
@@ -56,16 +56,18 @@ export class Pacman {
         this.timers = [];
         this.wakaSound = new Audio('../sounds/waka.wav');
         this.powerDotSound = new Audio('../sounds/power_dot.wav');
+        this.eatGhostSound = new Audio('../sounds/eat_ghost.wav');
         document.addEventListener("keydown", __classPrivateFieldGet(this, _Pacman_keydown, "f"));
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_loadPacmanImages).call(this);
     }
-    draw(ctx, pause) {
+    draw(ctx, pause, enemies) {
         if (!pause) {
             __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_move).call(this);
             __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_animate).call(this);
         }
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_eatDot).call(this);
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_eatPowerDot).call(this);
+        __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_eatGhost).call(this, enemies);
         const size = this.tileSize / 2;
         ctx.save();
         ctx.translate(this.x + size, this.y + size);
@@ -165,5 +167,13 @@ _Pacman_keydown = new WeakMap(), _Pacman_instances = new WeakSet(), _Pacman_load
             this.powerDotIsAboutToExpire = true;
         }, 1000 * 3);
         this.timers.push(powerDotIsAboutToExpireTimer);
+    }
+}, _Pacman_eatGhost = function _Pacman_eatGhost(enemies) {
+    if (this.powerDotIsActive) {
+        const collideEnemies = enemies.filter((enemy) => enemy.collideWith(this));
+        collideEnemies.forEach(enemy => {
+            enemies.splice(enemies.indexOf(enemy), 1);
+            this.eatGhostSound.play();
+        });
     }
 };
