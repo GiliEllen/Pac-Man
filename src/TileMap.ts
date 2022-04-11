@@ -193,6 +193,10 @@ export class TileMap {
         return false;
     }
 
+    didWin() {
+        return this.#dotsLeft() === 0;
+    }
+
     // Private Method:
     // Draw the wall, by the arguments that passes (x Posiotn -> coulmn, y Position -> row, size - tileSize)
     #drawWall(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {
@@ -222,6 +226,10 @@ export class TileMap {
     #drawBlank(ctx: CanvasRenderingContext2D, column: number, row: number, size: number) {
         ctx.fillStyle = 'black';
         ctx.fillRect(column * this.tileSize, row * this.tileSize, size, size);
+    }
+
+    #dotsLeft() {
+        return this.map.flat().filter((tile) => tile === 0).length
     }
 }
 

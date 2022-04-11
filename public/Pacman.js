@@ -147,7 +147,7 @@ _Pacman_keydown = new WeakMap(), _Pacman_instances = new WeakSet(), _Pacman_load
     }
 }, _Pacman_eatDot = function _Pacman_eatDot() {
     if (this.tileMap.eatDot(this.x, this.y) && this.madeFirstMove) {
-        this.wakaSound.play();
+        //this.wakaSound.play();
     }
 }, _Pacman_eatPowerDot = function _Pacman_eatPowerDot() {
     if (this.tileMap.eatPowerDot(this.x, this.y)) {

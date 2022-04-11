@@ -3,7 +3,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _TileMap_instances, _TileMap_drawWall, _TileMap_drawDot, _TileMap_drawPowerDot, _TileMap_drawBlank;
+var _TileMap_instances, _TileMap_drawWall, _TileMap_drawDot, _TileMap_drawPowerDot, _TileMap_drawBlank, _TileMap_dotsLeft;
 import { MovingDirection } from './MoveDirection.js';
 import { Enemy } from './Enemy.js';
 import { Pacman } from './Pacman.js';
@@ -163,6 +163,9 @@ export class TileMap {
         }
         return false;
     }
+    didWin() {
+        return __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_dotsLeft).call(this) === 0;
+    }
 }
 _TileMap_instances = new WeakSet(), _TileMap_drawWall = function _TileMap_drawWall(ctx, column, row, size) {
     ctx.drawImage(this.wall, column * this.tileSize, row * this.tileSize, size, size);
@@ -183,4 +186,6 @@ _TileMap_instances = new WeakSet(), _TileMap_drawWall = function _TileMap_drawWa
 }, _TileMap_drawBlank = function _TileMap_drawBlank(ctx, column, row, size) {
     ctx.fillStyle = 'black';
     ctx.fillRect(column * this.tileSize, row * this.tileSize, size, size);
+}, _TileMap_dotsLeft = function _TileMap_dotsLeft() {
+    return this.map.flat().filter((tile) => tile === 0).length;
 };
