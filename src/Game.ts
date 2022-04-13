@@ -9,7 +9,7 @@ const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 const tileMap = new TileMap(tileSize);
 const pacman = tileMap.getPacman(velocity) as Pacman;
-const enemies = tileMap.getEnemies(velocity);
+const enemies = tileMap.getEnemies(velocity) as Array<Enemy>;
 
 let gameOver = false;
 let gameWin = false;
@@ -18,9 +18,9 @@ const gameOverSound = new Audio('../sounds/gameOver.wav');
 const gameWinSound = new Audio('../sounds/gameWin.wav')
 
 function gameLoop() {
-    tileMap.draw(ctx);
+    tileMap.draw(ctx); //Drawing a map every 13.3 mili seconds
     drawGameEnd();
-    pacman.draw(ctx, pause(), enemies);
+    pacman.draw(ctx, pause(), enemies); // Drawing pacman every 13.3
     enemies.forEach(enemy => {
         enemy.draw(ctx, pause(), pacman);
     });
