@@ -25,6 +25,9 @@ export class Enemy {
         this.scaredAboutToExpireTimer = this.scaredAboutToExpireTimerDefault;
         __classPrivateFieldGet(this, _Enemy_instances, "m", _Enemy_loadImages).call(this);
     }
+    // Method:
+    // if the game is not pause allow enemies to move and change direction
+    // Draw enemey
     draw(ctx, pause, pacman) {
         if (!pause) {
             __classPrivateFieldGet(this, _Enemy_instances, "m", _Enemy_move).call(this);
@@ -32,6 +35,8 @@ export class Enemy {
         }
         this.setImage(ctx, pacman);
     }
+    // Method: 
+    // Check if pacman and enemies meet at X && Y position 
     collideWith(pacman) {
         const size = this.tileSize / 2;
         if (this.x < pacman.x + size &&
@@ -44,6 +49,10 @@ export class Enemy {
             return false;
         }
     }
+    // Method:
+    // Checks if power dot has been eaten
+    // True: call for private method to draw scared ghosts
+    // Else : draw a normal ghost 
     setImage(ctx, pacman) {
         if (pacman.powerDotIsActive) {
             __classPrivateFieldGet(this, _Enemy_instances, "m", _Enemy_setImageWhenPowerDotIsActive).call(this, pacman);
