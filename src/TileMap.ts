@@ -10,6 +10,13 @@ export class TileMap {
     powerDotAnimationTimerDefault: number;
     powerDotAnimationTimer: number;
 
+    topRightCorner: HTMLImageElement;
+    topLeftCorner: HTMLImageElement;
+    bottomRightCorner: HTMLImageElement;
+    bottomLeftCorner: HTMLImageElement;
+    horizontalWall: HTMLImageElement;
+    verticalWall: HTMLImageElement;
+
     constructor(tileSize: number) {
         this.tileSize = tileSize;
 
@@ -21,6 +28,25 @@ export class TileMap {
 
         this.wall = new Image();
         this.wall.src = '../images/wall.png';
+
+        this.topRightCorner  = new Image()
+        this.topRightCorner.src = '../images/32x32_wall02.png'
+
+        this.topLeftCorner = new Image()
+        this.topLeftCorner.src = '../images/32x32_wall05.png'
+
+        this.bottomRightCorner = new Image()
+        this.bottomRightCorner.src = '../images/32x32_wall03.png'
+
+        this.bottomLeftCorner = new Image()
+        this.bottomLeftCorner.src = '../images/32x32_wall04.png'
+
+        this.horizontalWall = new Image()
+        this.horizontalWall.src = '../images/32x32_wall01.png'
+
+        this.verticalWall = new Image()
+        this.verticalWall.src = '../images/32x32_wall06.png'
+
 
         this.powerDot = this.pinkDot;
         this.powerDotAnimationTimerDefault = 30;
@@ -50,6 +76,7 @@ export class TileMap {
         [1, 7, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
+    
     // Method: 
     // drawing the canvas acorrding to the map
     draw(ctx: CanvasRenderingContext2D) {
@@ -57,13 +84,14 @@ export class TileMap {
             for (let column = 0; column < this.map[row].length; column++) {
                 let tile = this.map[row][column];
                 if (tile === 1) { // if tile = 1 draw wall
-                    this.#drawWall(ctx, column, row, this.tileSize)
+                    this.#drawWall(ctx, column, row, this.tileSize);
                 } else if (tile === 0) { // if tile = 0 draw dot
-                    this.#drawDot(ctx, column, row, this.tileSize)
+                    this.#drawDot(ctx, column, row, this.tileSize);
                 } else if (tile === 7) { // if tile = 7 draw powerDot
-                    this.#drawPowerDot(ctx, column, row, this.tileSize)
-                } else { // else draw blank (black square 32x32)
-                    this.#drawBlank(ctx, column, row, this.tileSize)
+                    this.#drawPowerDot(ctx, column, row, this.tileSize);
+                }
+                else { // else draw blank (black square 32x32)
+                    this.#drawBlank(ctx, column, row, this.tileSize);
                 }
 
                 //*************Visual**************/

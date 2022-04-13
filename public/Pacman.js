@@ -58,6 +58,8 @@ export class Pacman {
         this.madeFirstMove = false;
         this.powerDotIsActive = false;
         this.powerDotIsAboutToExpire = false;
+        this.userPoints = 0;
+        this.pointsDisplay = document.querySelector('#userPoints');
         this.timers = [];
         this.wakaSound = new Audio('../sounds/waka.wav');
         this.powerDotSound = new Audio('../sounds/power_dot.wav');
@@ -155,10 +157,14 @@ _Pacman_keydown = new WeakMap(), _Pacman_instances = new WeakSet(), _Pacman_load
 }, _Pacman_eatDot = function _Pacman_eatDot() {
     if (this.tileMap.eatDot(this.x, this.y) && this.madeFirstMove) {
         this.wakaSound.play();
+        this.userPoints++;
+        this.pointsDisplay.innerHTML = `${this.userPoints}`;
     }
 }, _Pacman_eatPowerDot = function _Pacman_eatPowerDot() {
     if (this.tileMap.eatPowerDot(this.x, this.y)) {
         this.powerDotSound.play();
+        this.userPoints += 5;
+        this.pointsDisplay.innerHTML = `${this.userPoints}`;
         this.powerDotIsActive = true;
         this.powerDotIsAboutToExpire = false;
         this.timers.forEach(timer => {

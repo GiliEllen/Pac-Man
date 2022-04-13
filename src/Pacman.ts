@@ -23,6 +23,8 @@ export class Pacman {
     powerDotIsActive: boolean;
     powerDotIsAboutToExpire: boolean;
     timers: Array<number>;
+    userPoints:number;
+    pointsDisplay: HTMLSpanElement;
 
     constructor(x: number, y: number, tileSize: number, velocity: number, tileMap: TileMap) {
         this.x = x;
@@ -43,6 +45,10 @@ export class Pacman {
 
         this.powerDotIsActive = false;
         this.powerDotIsAboutToExpire = false;
+        
+        this.userPoints = 0;
+
+        this.pointsDisplay = document.querySelector('#userPoints')!;
 
         this.timers = [];
 
@@ -227,6 +233,8 @@ export class Pacman {
     #eatDot() {
         if (this.tileMap.eatDot(this.x, this.y) && this.madeFirstMove) {
             this.wakaSound.play();
+            this.userPoints++;
+            this.pointsDisplay.innerHTML = `${this.userPoints}`;
         }
     }
 
@@ -239,6 +247,8 @@ export class Pacman {
     #eatPowerDot() {
         if (this.tileMap.eatPowerDot(this.x, this.y)) {
             this.powerDotSound.play();
+            this.userPoints += 5;
+            this.pointsDisplay.innerHTML = `${this.userPoints}`;
             this.powerDotIsActive = true;
             this.powerDotIsAboutToExpire = false;
 
@@ -264,7 +274,7 @@ export class Pacman {
     // Private Method:
     // While powerDot is active pacman allowed to eat ghosts
     // While pacman Colide with ghost and while powerDot is active splice the ghost that was collided with pacman
-    // Play eat ghost sound
+    // Play eat ghost
     #eatGhost(enemies:Array<Enemy>) {
         if (this.powerDotIsActive) {
             const collideEnemies = enemies.filter((enemy) => enemy.collideWith(this));
