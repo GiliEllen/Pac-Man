@@ -2,6 +2,7 @@ import { MovingDirection } from "./MoveDirection.js";
 import { Pacman } from "./Pacman.js";
 import { TileMap } from "./TileMap.js";
 
+// Creating enemy constractor
 export class Enemy {
     x: number;
     y: number;
