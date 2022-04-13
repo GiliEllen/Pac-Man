@@ -17,6 +17,8 @@ export class Pacman {
             left: 2,
             up: 3
         };
+        // Private Method:
+        // Checkes which keydown and setting the request to the key down
         _Pacman_keydown.set(this, (event) => {
             this.madeFirstMove = true;
             if (event.key === "ArrowUp") { //up
@@ -39,7 +41,10 @@ export class Pacman {
                     this.currentMovingDirection = MovingDirection.left;
                 this.requestedMovingDirection = MovingDirection.left;
             }
-        });
+        }
+        // Private Method:
+        // Setting pacman to move 
+        );
         this.x = x;
         this.y = y;
         this.tileSize = tileSize;
@@ -60,61 +65,63 @@ export class Pacman {
         document.addEventListener("keydown", __classPrivateFieldGet(this, _Pacman_keydown, "f"));
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_loadPacmanImages).call(this);
     }
+    // Method:
+    // Drawing Pacman every 13.3 mili seconds
     draw(ctx, pause, enemies) {
-        if (!pause) {
+        if (!pause) { // if game is not paused
             __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_move).call(this);
             __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_animate).call(this);
         }
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_eatDot).call(this);
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_eatPowerDot).call(this);
         __classPrivateFieldGet(this, _Pacman_instances, "m", _Pacman_eatGhost).call(this, enemies);
+        // line 79 - 92
+        // Rotating the whole canvas to get the right perspective of the pacman.
+        // By the direcation pacman is moving.
         const size = this.tileSize / 2;
         ctx.save();
         ctx.translate(this.x + size, this.y + size);
         ctx.rotate((this.pacmanRotation * 90 * Math.PI) / 180);
         ctx.drawImage(this.pacmanImages[this.pacmanImageIndex], -size, -size, this.tileSize, this.tileSize);
         ctx.restore();
-        // ctx.drawImage(
-        //     this.pacmanImages[this.pacmanImageIndex],
-        //     this.x,
-        //     this.y,
-        //     this.tileSize,
-        //     this.tileSize)
     }
 }
 _Pacman_keydown = new WeakMap(), _Pacman_instances = new WeakSet(), _Pacman_loadPacmanImages = function _Pacman_loadPacmanImages() {
     const pacmanImage1 = new Image();
-    pacmanImage1.src = "../images/pac0.png";
+    pacmanImage1.src = "../images/pac0.png"; // Closed Mouth
     const pacmanImage2 = new Image();
-    pacmanImage2.src = "../images/pac1.png";
+    pacmanImage2.src = "../images/pac1.png"; // Half Opened Mouth
     const pacmanImage3 = new Image();
-    pacmanImage3.src = "../images/pac2.png";
+    pacmanImage3.src = "../images/pac2.png"; // Fully Opened Mouth
     const pacmanImage4 = new Image();
-    pacmanImage4.src = "../images/pac1.png";
+    pacmanImage4.src = "../images/pac1.png"; // Half Opened Mouth
     this.pacmanImages = [
         pacmanImage1,
         pacmanImage2,
         pacmanImage3,
         pacmanImage4
     ];
-    this.pacmanImageIndex = 0;
+    this.pacmanImageIndex = 0; // Starting Pacman image
 }, _Pacman_move = function _Pacman_move() {
-    if (this.currentMovingDirection !== this.requestedMovingDirection) {
+    if (this.currentMovingDirection !== this.requestedMovingDirection) { // Checks if current moving direction not equals to requested moving direction
         if (Number.isInteger(this.x / this.tileSize) &&
             Number.isInteger(this.y / this.tileSize)) {
-            if (!this.tileMap.didCollideWithEnviorment(this.x, this.y, this.requestedMovingDirection))
-                this.currentMovingDirection = this.requestedMovingDirection;
+            if ( // if pacman didn't colide with wall
+            !this.tileMap.didCollideWithEnviorment(this.x, this.y, this.requestedMovingDirection))
+                this.currentMovingDirection = this.requestedMovingDirection; // Setting moving direction to the requested moving direction
         }
     }
-    if (this.tileMap.didCollideWithEnviorment(this.x, this.y, this.currentMovingDirection)) {
+    if (this.tileMap.didCollideWithEnviorment(// if pacman did collide with wall set pacman image to half opened mouth line 176 and setting the pacman image timer to null
+    this.x, this.y, this.currentMovingDirection)) {
         this.pacmanAnimationTimer = null;
         this.pacmanImageIndex = 1;
         return;
     }
     else if (this.currentMovingDirection !== null &&
-        this.pacmanAnimationTimer === null) {
+        this.pacmanAnimationTimer === null) { // if pacman is started moving setting pacman image animation timer to default timer
         this.pacmanAnimationTimer = this.pacmanAnimationTimerDefualt;
     }
+    // Setting pacman's x and y propreties to the current move direction that came from the user input.
     switch (this.currentMovingDirection) {
         case MovingDirection.up:
             this.y -= this.velocity;
@@ -141,7 +148,7 @@ _Pacman_keydown = new WeakMap(), _Pacman_instances = new WeakSet(), _Pacman_load
     if (this.pacmanAnimationTimer === 0) {
         this.pacmanAnimationTimer = this.pacmanAnimationTimerDefualt;
         this.pacmanImageIndex++;
-        if (this.pacmanImageIndex === this.pacmanImages.length) {
+        if (this.pacmanImageIndex === this.pacmanImages.length) { // if the image of the pacman is eaul to the last index rest pacman animation
             this.pacmanImageIndex = 0;
         }
     }

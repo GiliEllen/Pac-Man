@@ -20,12 +20,12 @@ export class TileMap {
         this.map = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 7, 1],
-            [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
+            [1, 6, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
             [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
             [1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1],
             [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 1, 6, 1, 0, 1, 1, 1, 1, 6, 0, 1],
-            [1, 0, 1, 0, 1, 0, 1, 0, 0, 7, 0, 0, 1],
+            [1, 0, 1, 0, 1, 4, 1, 0, 0, 7, 0, 0, 1],
             [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
             [1, 0, 1, 7, 0, 0, 1, 0, 0, 0, 1, 0, 1],
             [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 6, 1],
@@ -43,22 +43,25 @@ export class TileMap {
         this.powerDotAnimationTimerDefault = 30;
         this.powerDotAnimationTimer = this.powerDotAnimationTimerDefault;
     }
+    // Method: 
+    // drawing the canvas acorrding to the map
     draw(ctx) {
         for (let row = 0; row < this.map.length; row++) {
             for (let column = 0; column < this.map[row].length; column++) {
                 let tile = this.map[row][column];
-                if (tile === 1) {
+                if (tile === 1) { // if tile = 1 draw wall
                     __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawWall).call(this, ctx, column, row, this.tileSize);
                 }
-                else if (tile === 0) {
+                else if (tile === 0) { // if tile = 0 draw dot
                     __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawDot).call(this, ctx, column, row, this.tileSize);
                 }
-                else if (tile === 7) {
+                else if (tile === 7) { // if tile = 7 draw powerDot
                     __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawPowerDot).call(this, ctx, column, row, this.tileSize);
                 }
-                else {
+                else { // else draw blank (black square 32x32)
                     __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawBlank).call(this, ctx, column, row, this.tileSize);
                 }
+                //*************Visual**************/
                 // ctx.strokeStyle = "yellow";
                 // ctx.strokeRect(
                 //     column * this.tileSize,
@@ -77,6 +80,9 @@ export class TileMap {
         canvas.width = this.map[0].length * this.tileSize;
         canvas.height = this.map.length * this.tileSize;
     }
+    // Method:
+    // Getting pacman position acorrding the to map
+    // Returning the new Pacman with the currect position
     getPacman(velocity) {
         for (let row = 0; row < this.map.length; row++) {
             for (let column = 0; column < this.map[row].length; column++) {
@@ -88,6 +94,9 @@ export class TileMap {
             }
         }
     }
+    // Method:
+    // Getting enemies position acorrding the to map
+    // Returning the new enemies array of enemy with the currect position
     getEnemies(velocity) {
         const enemies = [];
         for (let row = 0; row < this.map.length; row++) {
@@ -95,23 +104,27 @@ export class TileMap {
                 const tile = this.map[row][column];
                 if (tile === 6) {
                     this.map[row][column] = 0;
-                    enemies.push(new Enemy(column * this.tileSize, row * this.tileSize, this.tileSize, velocity, this));
+                    enemies.push(new Enemy(// Push the new enemy to the enemies array
+                    column * this.tileSize, row * this.tileSize, this.tileSize, velocity, this));
                 }
             }
         }
         return enemies;
     }
+    // Method:
+    // Checks if pacman collide with walls
     didCollideWithEnviorment(x, y, direction) {
-        if (direction === null) {
+        if (direction === null) { // while the game paused
             return;
         }
+        // Checkes if the pacman inside the middle of the tile we calculate the tile size to be exactly an integer
         if (Number.isInteger(x / this.tileSize) &&
             Number.isInteger(y / this.tileSize)) {
             let column = 0; // index of column in map
             let row = 0; // index of row in map
             let nextColumn = 0; // var to calculate the next column index
             let nextRow = 0; // var to calculate the next row index
-            switch (direction) {
+            switch (direction) { //Checking direction cases
                 case MovingDirection.right:
                     nextColumn = x + this.tileSize;
                     column = nextColumn / this.tileSize;
@@ -133,24 +146,28 @@ export class TileMap {
                     column = x / this.tileSize;
                     break;
             }
-            const tile = this.map[row][column];
+            const tile = this.map[row][column]; // After geting the next tile checking if equals to 1 pacman colided with wall
             if (tile === 1) {
                 return true;
             }
         }
         return false;
     }
+    // Method:
+    // If pacman inside the tile in the middle of the dot eat it
     eatDot(x, y) {
         const row = y / this.tileSize;
         const column = x / this.tileSize;
-        if (Number.isInteger(row) && Number.isInteger(column)) {
-            if (this.map[row][column] === 0) {
-                this.map[row][column] = 5;
+        if (Number.isInteger(row) && Number.isInteger(column)) { // Checkes if the pacman inside the middle of the tile we calculate the tile size to be exactly an integer
+            if (this.map[row][column] === 0) { // If the tile that pacman was a dot
+                this.map[row][column] = 5; // turn dot into blank space
                 return true;
             }
         }
         return false;
     }
+    // Method:
+    // If pacman inside the tile in the middle of the powerDot eat it
     eatPowerDot(x, y) {
         const column = x / this.tileSize;
         const row = y / this.tileSize;
@@ -163,6 +180,8 @@ export class TileMap {
         }
         return false;
     }
+    // Method: 
+    // Checks if there any left  tiles that equals to 0 (any dots left)
     didWin() {
         return __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_dotsLeft).call(this) === 0;
     }
@@ -172,10 +191,10 @@ _TileMap_instances = new WeakSet(), _TileMap_drawWall = function _TileMap_drawWa
 }, _TileMap_drawDot = function _TileMap_drawDot(ctx, column, row, size) {
     ctx.drawImage(this.yellowDot, column * this.tileSize, row * this.tileSize, size, size);
 }, _TileMap_drawPowerDot = function _TileMap_drawPowerDot(ctx, column, row, size) {
-    this.powerDotAnimationTimer--;
+    this.powerDotAnimationTimer--; // decreasing the timer by 1;
     if (this.powerDotAnimationTimer === 0) {
-        this.powerDotAnimationTimer = this.powerDotAnimationTimerDefault;
-        if (this.powerDot === this.pinkDot) {
+        this.powerDotAnimationTimer = this.powerDotAnimationTimerDefault; // reseting the timer to default
+        if (this.powerDot === this.pinkDot) { // toggle between powerDot img
             this.powerDot = this.yellowDot;
         }
         else {

@@ -62,8 +62,10 @@ export class Pacman {
         up: 3
     }
 
+    // Method:
+    // Drawing Pacman every 13.3 mili seconds
     draw(ctx: CanvasRenderingContext2D, pause: boolean, enemies:Array<Enemy>) {
-        if (!pause) {
+        if (!pause) { // if game is not paused
             this.#move();
             this.#animate();
         }
@@ -71,6 +73,9 @@ export class Pacman {
         this.#eatPowerDot();
         this.#eatGhost(enemies);
 
+        // line 79 - 92
+        // Rotating the whole canvas to get the right perspective of the pacman.
+        // By the direcation pacman is moving.
         const size = this.tileSize / 2;
 
         ctx.save();
@@ -85,27 +90,23 @@ export class Pacman {
         );
 
         ctx.restore();
-
-        // ctx.drawImage(
-        //     this.pacmanImages[this.pacmanImageIndex],
-        //     this.x,
-        //     this.y,
-        //     this.tileSize,
-        //     this.tileSize)
     }
 
+    // Private Method:
+    // Setting pacman images 
+    // Inserting all pacman images into array
     #loadPacmanImages() {
         const pacmanImage1 = new Image();
-        pacmanImage1.src = "../images/pac0.png";
+        pacmanImage1.src = "../images/pac0.png"; // Closed Mouth
 
         const pacmanImage2 = new Image();
-        pacmanImage2.src = "../images/pac1.png";
+        pacmanImage2.src = "../images/pac1.png"; // Half Opened Mouth
 
         const pacmanImage3 = new Image();
-        pacmanImage3.src = "../images/pac2.png";
+        pacmanImage3.src = "../images/pac2.png"; // Fully Opened Mouth
 
         const pacmanImage4 = new Image();
-        pacmanImage4.src = "../images/pac1.png";
+        pacmanImage4.src = "../images/pac1.png"; // Half Opened Mouth
 
         this.pacmanImages = [
             pacmanImage1,
@@ -114,9 +115,11 @@ export class Pacman {
             pacmanImage4
         ];
 
-        this.pacmanImageIndex = 0;
+        this.pacmanImageIndex = 0; // Starting Pacman image
     }
 
+    // Private Method:
+    // Checkes which keydown and setting the request to the key down
     #keydown = (event: KeyboardEvent) => {
         this.madeFirstMove = true;
         if (event.key === "ArrowUp") { //up
@@ -144,24 +147,26 @@ export class Pacman {
         }
     }
 
+    // Private Method:
+    // Setting pacman to move 
     #move() {
-        if (this.currentMovingDirection !== this.requestedMovingDirection) {
+        if (this.currentMovingDirection !== this.requestedMovingDirection) { // Checks if current moving direction not equals to requested moving direction
             if (Number.isInteger(this.x / this.tileSize) &&
                 Number.isInteger(this.y / this.tileSize)
             ) {
 
-                if (
+                if ( // if pacman didn't colide with wall
                     !this.tileMap.didCollideWithEnviorment(
                         this.x,
                         this.y,
                         this.requestedMovingDirection
                     )
                 )
-                    this.currentMovingDirection = this.requestedMovingDirection;
+                    this.currentMovingDirection = this.requestedMovingDirection; // Setting moving direction to the requested moving direction
             }
         }
 
-        if (this.tileMap.didCollideWithEnviorment(
+        if (this.tileMap.didCollideWithEnviorment( // if pacman did collide with wall set pacman image to half opened mouth line 176 and setting the pacman image timer to null
             this.x,
             this.y,
             this.currentMovingDirection
@@ -172,10 +177,11 @@ export class Pacman {
             return;
         }
         else if (this.currentMovingDirection !== null &&
-            this.pacmanAnimationTimer === null) {
+            this.pacmanAnimationTimer === null) { // if pacman is started moving setting pacman image animation timer to default timer
             this.pacmanAnimationTimer = this.pacmanAnimationTimerDefualt;
         }
 
+        // Setting pacman's x and y propreties to the current move direction that came from the user input.
         switch (this.currentMovingDirection) {
             case MovingDirection.up:
                 this.y -= this.velocity;
@@ -199,6 +205,8 @@ export class Pacman {
         }
     }
 
+    // Private Method:
+    // Acorrding to timer animating pacman image
     #animate() {
         if (this.pacmanAnimationTimer === null) {
             return;
@@ -207,18 +215,27 @@ export class Pacman {
         if (this.pacmanAnimationTimer === 0) {
             this.pacmanAnimationTimer = this.pacmanAnimationTimerDefualt;
             this.pacmanImageIndex++;
-            if (this.pacmanImageIndex === this.pacmanImages.length) {
+            if (this.pacmanImageIndex === this.pacmanImages.length) { // if the image of the pacman is eaul to the last index rest pacman animation
                 this.pacmanImageIndex = 0;
             }
         }
     }
 
+    // Private Method:
+    // If condition is true
+    // play wakaSound
     #eatDot() {
         if (this.tileMap.eatDot(this.x, this.y) && this.madeFirstMove) {
             this.wakaSound.play();
         }
     }
 
+    // Private Method:
+    // Checks if powerDot was eaten by pacman
+    // Play PowerDotSound
+    // Reset all powerDot Timers
+    // powerDot timer was eaten is a timer of 6 seconds
+    // powerDotIsAboutToExpire timer is a timer of 3 seconds
     #eatPowerDot() {
         if (this.tileMap.eatPowerDot(this.x, this.y)) {
             this.powerDotSound.play();
@@ -244,6 +261,10 @@ export class Pacman {
         }
     }
     
+    // Private Method:
+    // While powerDot is active pacman allowed to eat ghosts
+    // While pacman Colide with ghost and while powerDot is active splice the ghost that was collided with pacman
+    // Play eat ghost sound
     #eatGhost(enemies:Array<Enemy>) {
         if (this.powerDotIsActive) {
             const collideEnemies = enemies.filter((enemy) => enemy.collideWith(this));

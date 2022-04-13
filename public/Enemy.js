@@ -5,6 +5,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 };
 var _Enemy_instances, _Enemy_setImageWhenPowerDotIsActive, _Enemy_loadImages, _Enemy_random, _Enemy_move, _Enemy_changeDirection;
 import { MovingDirection } from "./MoveDirection.js";
+// Creating enemy constractor
 export class Enemy {
     constructor(x, y, tileSize, velocity, tileMap) {
         _Enemy_instances.add(this);
