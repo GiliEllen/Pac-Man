@@ -65,6 +65,7 @@ export class TileMap {
                     this.#drawBlank(ctx, column, row, this.tileSize)
                 }
 
+                //*************Visual**************/
                 // ctx.strokeStyle = "yellow";
                 // ctx.strokeRect(
                 //     column * this.tileSize,

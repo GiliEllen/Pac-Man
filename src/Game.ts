@@ -20,7 +20,7 @@ const gameWinSound = new Audio('../sounds/gameWin.wav')
 function gameLoop() {
     tileMap.draw(ctx); //Drawing a map every 13.3 mili seconds
     drawGameEnd();
-    pacman.draw(ctx, pause(), enemies); // Drawing pacman every 13.3
+    pacman.draw(ctx, pause(), enemies); // Drawing pacman every 13.3 mili seconds
     enemies.forEach(enemy => {
         enemy.draw(ctx, pause(), pacman);
     });
@@ -28,10 +28,15 @@ function gameLoop() {
     checkGameWin();
 }
 
+// Function:
+// Pauses the game if creatia is met
 function pause() {
     return !pacman.madeFirstMove || gameOver || gameWin;
 }
 
+// Function:
+// Checks if game over
+// true : play sound GameOver
 function checkGameOver() {
     if (!gameOver) { //if gameOver === false
         gameOver = isGameOver();
@@ -41,6 +46,9 @@ function checkGameOver() {
     }
 }
 
+// Function:
+// Checks if game won
+// true : play sound GameWon
 function checkGameWin() {
     if (!gameWin) {
         gameWin = tileMap.didWin();
@@ -50,12 +58,20 @@ function checkGameWin() {
     }
 }
 
+// Function:
+// return true or false
+// Checks if pacman didnt eat powerDot and collide with enemy
+// true: GameOver
+// false: Keep Playing
 function isGameOver() {
     return enemies.some(
-        (enemy) => !pacman.powerDotIsActive && enemy.collideWith(pacman)
+        (enemy) => !pacman.powerDotIsActive && enemy.collideWith(pacman) 
     );
 }
 
+// Function:
+// Checks if GameWin or GameOver
+// Displays the messeage on the screen GameOver | GameWin
 function drawGameEnd() {
     if (gameOver || gameWin) {
         let text = "  You Win!";
