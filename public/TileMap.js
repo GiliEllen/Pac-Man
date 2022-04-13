@@ -59,6 +59,7 @@ export class TileMap {
                 else {
                     __classPrivateFieldGet(this, _TileMap_instances, "m", _TileMap_drawBlank).call(this, ctx, column, row, this.tileSize);
                 }
+                //*************Visual**************/
                 // ctx.strokeStyle = "yellow";
                 // ctx.strokeRect(
                 //     column * this.tileSize,
